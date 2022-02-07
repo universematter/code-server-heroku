@@ -8,6 +8,7 @@ COPY deploy-container/settings.json .local/share/code-server/User/settings.json
 
 ENV SHELL=/bin/bash
 ENV NODE_VERSION lts/*
+ENV NVM_DIR /usr/local/nvm
 
 # Install unzip + rclone (support for remote filesystem)
 RUN sudo apt-get update && sudo apt-get install unzip -y
@@ -25,23 +26,20 @@ RUN sudo chown -R coder:coder /home/coder/.local
 RUN code-server --install-extension shan.code-settings-sync
 
 RUN curl -fsSL https://deno.land/x/install/install.sh | sh
-
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && \
-    chmod +x $HOME/.nvm/nvm.sh && \
-    . $HOME/.nvm/nvm.sh && \
-    nvm install --latest-npm "$NODE_VERSION" && \
-    npm install -g yarn
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+RUN bash -c 'source $HOME/.nvm/nvm.sh \
+    && nvm install "$NODE_VERSION" \
+    && nvm use "$NODE_VERSION" \
+    && npm install -g yarn \
+    && echo "----- INSTALLED -----" \
+    && echo "\nNODE=" && node --version \
+    && echo "\nNPM=" && npm --version \
+    && echo "\nYARN=" && yarn --version'
 
 #RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 #RUN sudo apt-get install -y \
 #    nodejs \
 #    yarnpkg
-
-
-RUN echo "----- INSTALLED -----" && \
-    echo "\nNODE=" && node --version && \
-    echo "\nNPM=" && npm --version && \
-    echo "\nYARN=" && yarn --version
 
 # -----------
 
