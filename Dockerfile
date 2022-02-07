@@ -21,8 +21,10 @@ RUN sudo chown -R coder:coder /home/coder/.local
 
 # You can add custom software and dependencies for your environment below
 # -----------
-# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-# RUN bash -c 'source $HOME/.nvm/nvm.sh \
+# ENV NVM_DIR=/usr/local/nvm
+# RUN bash -c 'mkdir -p $NVM_DIR \
+#    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
+#    && source $HOME/.nvm/nvm.sh \
 #    && nvm install --latest-npm "$NODE_VERSION" \
 #    && nvm alias default "$NODE_VERSION" \
 #    && nvm use default'
@@ -46,9 +48,9 @@ RUN sudo apt update && sudo apt-get install -y \
 SHELL ["/bin/bash", "--login", "-c"]
     
 RUN echo "----- INSTALLED -----" \
-    && echo "\nNODE=" && node --version \
-    && echo "\nNPM=" && npm --version \
-    && echo "\nYARN=" && yarn --version
+    && echo "NODE" && node --version \
+    && echo "NPM" && npm --version \
+    && echo "YARN" && yarn --version
 
 # -----------
 
