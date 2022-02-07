@@ -6,8 +6,8 @@ USER coder
 # Apply VS Code settings
 COPY deploy-container/settings.json .local/share/code-server/User/settings.json
 
-# Use bash shell
 ENV SHELL=/bin/bash
+ENV NODE_VERSION lts/*
 
 # Install unzip + rclone (support for remote filesystem)
 RUN sudo apt-get update && sudo apt-get install unzip -y
@@ -26,10 +26,22 @@ RUN code-server --install-extension shan.code-settings-sync
 
 RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-RUN sudo apt-get install -y \
-    nodejs \
-    yarn
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && \
+    chmod +x $HOME/.nvm/nvm.sh && \
+    . $HOME/.nvm/nvm.sh && \
+    nvm install --latest-npm "$NODE_VERSION" && \
+    npm install -g yarn
+
+#RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+#RUN sudo apt-get install -y \
+#    nodejs \
+#    yarnpkg
+
+
+RUN echo "----- INSTALLED -----" && \
+    echo "\nNODE=" && node --version && \
+    echo "\nNPM=" && npm --version && \
+    echo "\nYARN=" && yarn --version
 
 # -----------
 
