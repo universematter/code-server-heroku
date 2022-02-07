@@ -28,13 +28,21 @@ RUN code-server --install-extension shan.code-settings-sync
 RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 RUN bash -c 'source $HOME/.nvm/nvm.sh \
-    && nvm install "$NODE_VERSION" \
-    && nvm use "$NODE_VERSION" \
-    && npm install -g yarn \
-    && echo "----- INSTALLED -----" \
+    && nvm install --latest-npm "$NODE_VERSION" \
+    && nvm alias default "$NODE_VERSION" \
+    && nvm use default \
+    && DEFAULT_NODE_VERSION=$(nvm version default) \
+    && ln -sf $NVM_DIR/versions/node/$DEFAULT_NODE_VERSION/bin/node /usr/bin/nodejs \
+    && ln -sf $NVM_DIR/versions/node/$DEFAULT_NODE_VERSION/bin/node /usr/bin/node \
+    && ln -sf $NVM_DIR/versions/node/$DEFAULT_NODE_VERSION/bin/npm /usr/bin/npm \
+    && npm install -g yarn'
+
+SHELL ["/bin/bash", "--login", "-c"]
+    
+RUN echo "----- INSTALLED -----" \
     && echo "\nNODE=" && node --version \
     && echo "\nNPM=" && npm --version \
-    && echo "\nYARN=" && yarn --version'
+    && echo "\nYARN=" && yarn --version
 
 #RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 #RUN sudo apt-get install -y \
