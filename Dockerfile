@@ -24,17 +24,12 @@ RUN sudo chown -R coder:coder /home/coder/.local
 
 RUN code-server --install-extension shan.code-settings-sync
 
-RUN curl https://get.volta.sh | bash
-RUN volta install node@16 yarn
-
 RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 
-#RUN curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -
-#RUN sudo apt-get update && \
-#    sudo apt-get upgrade -y && \
-#    sudo apt-get install -y \
-#    nodejs \
-#    yarn
+RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+RUN sudo apt-get install -y \
+    nodejs \
+    yarn
 
 # -----------
 
