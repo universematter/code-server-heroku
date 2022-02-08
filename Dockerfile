@@ -24,28 +24,29 @@ RUN sudo chown -R coder:coder /home/coder/.local
 RUN code-server --install-extension shan.code-settings-sync
 RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 
-ENV NODE_VERSION lts/*
-ENV NVM_DIR=/usr/local/nvm
-RUN bash -c 'mkdir -p $NVM_DIR \
-    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
-    && source $HOME/.nvm/nvm.sh \
-    && nvm install --latest-npm "$NODE_VERSION" \
-    && nvm alias default "$NODE_VERSION" \
-    && nvm use default \
-    && DEFAULT_NODE_VERSION=$(nvm version default) \
-    && ln -sf $NVM_DIR/versions/node/$DEFAULT_NODE_VERSION/bin/node /usr/bin/nodejs \
-    && ln -sf $NVM_DIR/versions/node/$DEFAULT_NODE_VERSION/bin/node /usr/bin/node \
-    && ln -sf $NVM_DIR/versions/node/$DEFAULT_NODE_VERSION/bin/npm /usr/bin/npm \
-    && npm install -g yarn'
+# ENV NODE_VERSION lts/*
+# ENV NVM_DIR=/usr/local/nvm
+# ENV NVM_VERSION=0.39.1
+# RUN bash -c 'mkdir -p $NVM_DIR \
+#     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v$NVM_VERSION/install.sh | bash \
+#     && source $HOME/.nvm/nvm.sh \
+#     && nvm install --latest-npm "$NODE_VERSION" \
+#     && nvm alias default "$NODE_VERSION" \
+#     && nvm use default \
+#     && DEFAULT_NODE_VERSION=$(nvm version default) \
+#     && ln -sf $NVM_DIR/versions/node/$DEFAULT_NODE_VERSION/bin/node /usr/bin/nodejs \
+#     && ln -sf $NVM_DIR/versions/node/$DEFAULT_NODE_VERSION/bin/node /usr/bin/node \
+#     && ln -sf $NVM_DIR/versions/node/$DEFAULT_NODE_VERSION/bin/npm /usr/bin/npm \
+#     && npm install -g yarn'
 
-# RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-# RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-# RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-# RUN sudo apt update && sudo apt-get install -y \
-#     nodejs \
-#     yarn
+RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN sudo apt update && sudo apt-get install -y \
+    nodejs \
+    yarn
 
-SHELL ["/bin/bash", "--login", "-c"]
+# SHELL ["/bin/bash", "--login", "-c"]
     
 RUN echo "----- INSTALLED -----" \
     && echo "NODE" && node --version \
