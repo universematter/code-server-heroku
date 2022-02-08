@@ -43,20 +43,40 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 RUN sudo apt update && sudo apt-get install -y \
+    net-tools \
     nodejs \
     yarn
 
-# SHELL ["/bin/bash", "--login", "-c"]
     
 RUN echo "----- INSTALLED -----" \
     && echo "NODE" && node --version \
     && echo "NPM" && npm --version \
     && echo "YARN" && yarn --version
+    
+# FROM ubuntu:20.04
+# RUN apt-get update && apt-get install -y \
+#     build-essential \
+#     systemd \
+#     openssh-server
+
+# # Start OpenSSH with systemd
+# RUN systemctl enable ssh
+
+# # recommended: remove the system-wide environment override
+# RUN rm /etc/environment
+
+# # recommended: adjust OpenSSH config
+# RUN echo "PermitUserEnvironment yes" >> /etc/ssh/sshd_config && \
+#   echo "X11Forwarding yes" >> /etc/ssh/sshd_config && \
+#   echo "X11UseLocalhost no" >> /etc/ssh/sshd_config
+
 
 # -----------
 
 # Port
 ENV PORT=8080
+EXPOSE 22
+EXPOSE 18057-18060
 
 # Use our custom entrypoint script first
 COPY deploy-container/entrypoint.sh /usr/bin/deploy-container-entrypoint.sh
